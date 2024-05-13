@@ -97,7 +97,7 @@ function App() {
         return blockBlobClient.uploadData(fileArrayBuffer);
       })
       .then(() => {
-        setUploadStatus('Successfully finished upload');
+        setUploadStatus('URL obtenida con exito, péguela en el formulario');
         return request.get(`/api/list?container=${containerName}`);
       })
       .then((result: AxiosResponse<ListResponse>) => {
@@ -110,7 +110,7 @@ function App() {
         if (error instanceof Error) {
           const { message, stack } = error;
           setUploadStatus(
-            `Failed to finish upload with error : ${message} ${stack || ''}`
+            `No se pudo completar la subida : ${message} ${stack || ''}`
           );
         } else {
           setUploadStatus(error as string);
@@ -124,10 +124,10 @@ function App() {
         <Box m={4}>
           {/* App Title */}
           <Typography variant="h4" gutterBottom>
-            Upload file to Azure Storage
+            Herramienta para depositar imagenes
           </Typography>
           <Typography variant="h5" gutterBottom>
-            with SAS token
+            Obtener URL antes de rellenar el formulario
           </Typography>
           <Typography variant="body1" gutterBottom>
             <b>Container: {containerName}</b>
@@ -162,7 +162,7 @@ function App() {
               my={4}
             >
               <Button variant="contained" onClick={handleFileSasToken}>
-                Get SAS Token
+                Obtener SAS token
               </Button>
               {sasTokenUrl && (
                 <Box my={2}>
@@ -182,7 +182,7 @@ function App() {
               my={4}
             >
               <Button variant="contained" onClick={handleFileUpload}>
-                Upload
+                Subir
               </Button>
               {uploadStatus && (
                 <Box my={2}>
@@ -197,12 +197,12 @@ function App() {
           {/* Uploaded Files Display */}
           <Grid container spacing={2}>
             {list.map((item) => (
-              <Grid item xs={6} sm={4} md={3} key={item}>
+              <Grid item xs={12} sm={12} md={12} key={item}>
                 <Card>
-                  {item.endsWith('.jpg') ||
-                  item.endsWith('.png') ||
-                  item.endsWith('.jpeg') ||
-                  item.endsWith('.gif') ? (
+                  {item.endsWith('.aaa') ||
+                  item.endsWith('.aaa') ||
+                  item.endsWith('.aaa') ||
+                  item.endsWith('.aaa') ? (
                     <CardMedia component="img" image={item} alt={item} />
                   ) : (
                     <Typography variant="body1" gutterBottom>
