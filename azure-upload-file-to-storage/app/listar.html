@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Item List</title>
+<style>
+  
+  /* Greyish theme */
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+    color: #333;
+    margin: 0;
+    padding: 0;
+  }
+  h2 {
+    color: #444;
+    margin-top: 20px;
+  }
+  ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  display: flex;
+  align-items: center; /* Align items vertically */
+  margin-bottom: 20px;
+  padding: 20px;
+  border-radius: 5px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+}
+  li p {
+    margin: 0;
+    color: #666;
+  }
+  li img {
+    max-width: 100px;
+    border-radius: 5px;
+    margin-top: 10px;
+
+    }
+
+    #root {
+    flex: 1;
+    padding-left: 20px;
+  }
+
+   
+
+  nav {
+    background-color: #333;
+    overflow: hidden;
+  }
+
+  nav a {
+    float: left;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+  }
+
+  nav a:hover {
+    background-color: #ddd;
+    color: black;
+  }
+
+  .button {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  color: #fff;
+  background-color: #8b5d38; /* Blue color */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+.item-info {
+  flex: 1;
+}
+
+.item-info p {
+  margin: 0;
+  color: #666;
+}
+
+.item-img {
+  max-width: 100px;
+  border-radius: 5px;
+  margin-right: 20px; /* Add margin to separate image from text */
+}
+
+
+    /* Style for the form */
+    #FormSeleccionar {
+        max-width: 1000px;
+        margin: 0 auto;
+        display: flex; /* Use flexbox */
+        align-items: center; /* Align items vertically */
+    }
+    /* Style for the label */
+    label {
+        font-size: 18px;
+        margin-right: 10px; /* Add some spacing between label and input */
+    }
+    /* Style for the input field */
+    input[type="text"] {
+        padding: 10px;
+        margin-right: 10px; /* Add some spacing between input and button */
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box; /* Ensure the padding and border are included in the width */
+        flex: 1; /* Allow input to grow and take remaining space */
+    }
+    /* Style for the button */
+    button[type="button"] {
+        background-color: #ff6600;
+        color: #fff;
+        margin-right: 50px;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+    }
+    /* Hover effect for the button */
+    button[type="button"]:hover {
+        background-color: #cc5500;
+    }
+    #tiendaMostrar {
+        background-color: #f2f2f2; /* Grey background color */
+        padding: 10px; /* Add padding for spacing inside the box */
+        border: 1px solid #ccc; /* Grey border */
+        border-radius: 5px; /* Rounded corners */
+        display: inline-block; /* Make the box inline */
+        width: 240px; /* Set the width to your desired fixed value */
+        height: 20px; /* Set the height to your desired fixed value */
+    }
+</style>
+</head>
+<body>
+  <nav>
+    <a href="add.html">Añadir producto</a>
+    <a href="listar.html">Listar productos</a>
+    <a href="Borrar.html">Borrar producto</a>
+    <a href="Mod.html">Modificar producto</a>
+  </nav>
+  <div> 
+    <form id="FormSeleccionar">
+    <label for="Tienda">Indique una tienda:</label><br>
+    <input type="text" id="tiendaNombre" name="tiendaNombre"><br>
+    <button id="buttonSeleccionar" type="button" onsubmit="submitForm()" >Buscar Items</button>
+    <h3 id="tiendaMostrar"></h3>
+  </form>
+  
+</div>
+
+  <div><ul id="itemList"></ul></div>
+
+
+<script>
+  var tiendaActual;
+// Fetch data from the server
+fetch('https://proyectotiendas1.azurewebsites.net/prendas')
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(data => {
+    document.getElementById("tiendaMostrar").innerHTML = "Tienda actual : Sevilla";
+    tiendaActual = "sevilla";
+    // Render the list of items
+    renderItems(data);
+  })
+  .catch(error => {
+    console.error('There was a problem with the fetch operation:', error);
+    alert('Failed to fetch item list');
+  });
+
+function renderItems(items) {
+  // Get the list element
+  var itemListElement = document.getElementById('itemList');
+
+  // Clear any existing items
+  itemListElement.innerHTML = '';
+
+  // Loop through each item and create a list item element
+  items.forEach(item => {
+    var li = document.createElement('li');
+    // Display item details
+    li.innerHTML = `
+    <img class="item-img" src="${item.imagen}" alt="${item.nombre}">
+      <div class="item-info">
+      <p>ID: ${item.id}</p>
+      <p>Nombre: ${item.nombre}</p>
+      <p>Stock: ${item.stock}</p>
+      <p>Composición: ${item.composicion}</p>
+      <p>Proveedor: ${item.proveedor}</p>
+      <p>Talla: ${item.talla}</p>
+      <p>Categoría: ${item.categoria}</p>
+      <p>Precio: ${item.precio} USD</p>
+      <p>Descripción: ${item.descripcion}</p>
+      </div>
+      <button id="${item.id}" class="button" type="button" onclick="deleteItem(this.id)">Borrar Item</button>
+    `;
+    itemListElement.appendChild(li);
+  });
+}
+
+document.getElementById("buttonSeleccionar").addEventListener("click", function(event) {
+  event.preventDefault();
+
+ var tienda = document.getElementById("tiendaNombre").value;
+ tiendaActual = tienda;
+  fetch('https://proyectotiendas1.azurewebsites.net/prendas?tienda='+tienda)
+  .then(response => {
+    if (!response.ok) {
+      document.getElementById("tiendaMostrar").innerHTML = "Tienda no existente, utilice otra";
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(data => {
+    document.getElementById("tiendaMostrar").innerHTML = "Tienda actual : "+tienda;
+    // Render the list of items
+    renderItems(data);
+  })
+  .catch(error => {
+    console.error('There was a problem with the fetch operation:', error);
+    alert('Failed to fetch item list');
+  });
+
+function renderItems(items) {
+  // Get the list element
+  var itemListElement = document.getElementById('itemList');
+
+  // Clear any existing items
+  itemListElement.innerHTML = '';
+
+  // Loop through each item and create a list item element
+  items.forEach(item => {
+    var li = document.createElement('li');
+    // Display item details
+    li.innerHTML = `
+    <img class="item-img" src="${item.imagen}" alt="${item.nombre}">
+      <div class="item-info">
+      <p>ID: ${item.id}</p>
+      <p>Nombre: ${item.nombre}</p>
+      <p>Stock: ${item.stock}</p>
+      <p>Composición: ${item.composicion}</p>
+      <p>Proveedor: ${item.proveedor}</p>
+      <p>Talla: ${item.talla}</p>
+      <p>Categoría: ${item.categoria}</p>
+      <p>Precio: ${item.precio} USD</p>
+      <p>Descripción: ${item.descripcion}</p>
+      </div>
+      <button id="${item.id}" class="button" type="button" onclick="deleteItem(this.id)">Borrar Item</button>
+    `;
+    itemListElement.appendChild(li);
+  });
+}
+});
+
+function deleteItem(buttonId) {
+      // Perform DELETE request
+      fetch('https://proyectotiendas1.azurewebsites.net/delete?id=' + buttonId +'&tienda='+tiendaActual , {
+        method: 'DELETE'
+      })
+      .then(response => {
+        if (response.ok) {
+          alert("Item deleted successfully");
+          window.location.reload();
+        } else {
+          alert("Failed to delete item");
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert("An error occurred while deleting item");
+      });
+    }
+
+
+</script>
+
+</body>
+</html>
