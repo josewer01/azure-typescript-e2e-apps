@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StockFinder Admin Tool</title>
+<link rel="icon" type="image/x-icon" href="fav.png">
+<style>
+  
+    /* Global styles */
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f9f9f9;
+    }
+
+    /* Container styles */
+    .container {
+        width: 20%;
+        padding: 10px;
+        background-color:  #cc550075;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.aceptar{
+  width: 100px;
+        padding: 8px 16px;
+        margin-bottom: 10%;
+        background-color: #7ddd23;
+        color: #000000;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+  
+}
+li {
+  display: flex;
+  align-items: center; /* Align items vertically */
+  margin-bottom: 20px;
+  padding: 20px;
+  border-radius: 5px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+}
+  li p {
+    margin: 0;
+    color: #666;
+  }
+    .botones{
+      width: 100px;
+      margin-left: 10%;
+        padding: 10px;
+        background-color:  #ffffff;
+        border-radius: 5px;
+    }
+
+    #general {
+        width: 100%;
+        height: 10%;
+        background-color:  #cc550075;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    /* Title styles */
+    h1 {
+        font-size: 24px;
+        color: #333;
+        margin-top: 0;
+    }
+
+    /* Form styles */
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .form-group input[type="text"] {
+        width: 80%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+    }
+    /* List styles */
+    .item-info {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 10px;
+        background-color: #e2e1e1;
+        margin-left: 35%
+    }
+
+    /* Button styles */
+    .rechazar {
+        width: 100px;
+        padding: 8px 16px;
+        margin-bottom: 10%;
+        background-color: #ff0000;
+        color: #000000;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+
+    .aceptar:hover {
+        background-color: #348505;
+    }
+   
+    .rechazar:hover {
+        background-color: #831e1e;
+    }
+    #root {
+      flex: 1;
+      padding-left: 20px;
+    }
+  
+  
+    nav {
+      background-color: #333;
+      overflow: hidden;
+    }
+  
+    nav a {
+      float: left;
+      display: block;
+      color: white;
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+    }
+  
+    nav a:hover {
+      background-color: #ddd;
+      color: black;
+    
+    }
+
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="add.html">Añadir producto</a>
+    <a href="listar.html">Listar productos</a>
+    <a href="Borrar.html">Borrar producto</a>
+    <a href="peticiones.html">Peticiones</a>
+  </nav>
+      <div id="general">
+      <div class="container">
+        <h1>Lista de peticiones</h1>
+        <div class="form-group">
+            <label for="tiendaNombre">Tienda donante:</label>
+            <input type="text" id="tiendaNombre" name="tiendaNombre">
+        </div>
+      </div>
+        <div id="itemList"></div>
+
+</body>
+<script>
+   function getCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+      if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+  }
+
+  function eraseCookie(name) {
+    document.cookie = name + '=; Max-Age=-99999999;';
+  }
+
+  window.onload = function () {
+    var loggedIn = getCookie("loggedIn");
+    if (!loggedIn) {
+        window.location.href = "index.html";
+    }
+  };
+  var itemList;
+// Fetch data from the server
+fetch('https://proyectotiendas1.azurewebsites.net/solicitudes')
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(data => {
+    // Render the list of items
+    renderItems(data);
+  })
+  .catch(error => {
+    console.error('There was a problem with the fetch operation:', error);
+    alert('Failed to fetch item list');
+  });
+
+function renderItems(items) {
+  // Get the list element
+  var itemListElement = document.getElementById('itemList');
+
+  // Clear any existing items
+  itemListElement.innerHTML = '';
+  itemList = items;
+  // Loop through each item and create a list item element
+  items.forEach(item => {
+    var li = document.createElement('li');
+    // Display item details
+    li.innerHTML = `
+      <div class="item-info">
+      <p>ID: ${item.id}</p>
+      <p>ID de la prenda: ${item.id_prenda}</p>
+      <p>Origen : ${item.origen}</p>
+      <p>Cantidad solicitada: ${item.cantidad}</p>
+      </div>
+      <div class="botones">
+      <button class="aceptar" id="acepta_${item.id}" class="button" type="button" onclick="aceptaPeticion(${item.id})">Aceptar</button>
+      <button class="rechazar" id="borra_${item.id}" class="button" type="button" onclick="borraPeticion(${item.id})">Rechazar</button>
+      </div>
+    `;
+    itemListElement.appendChild(li);
+  });
+}
+
+
+
+
+
+function borraPeticion(buttonId) {
+      // Peticion POST
+      fetch('https://proyectotiendas1.azurewebsites.net/rechazarsolicitud?id=' + buttonId, {
+        method: 'DELETE'
+      })
+      .then(response => {
+        if (response.ok) {
+          alert("Peticion borrada con éxito");
+          window.location.reload();
+        } else {
+          alert("Failed to delete item");
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert("Error borrando la petición");
+      });
+    }
+
+    //retorna Item por ID
+    function findItemById(itemId) {
+    return itemList.find(function(item) {
+        return item.id === itemId;
+    });
+}
+
+function aceptaPeticion(buttonId){
+ var solicitud = findItemById(buttonId); //Mandamos este JSON
+
+ if(findItemById.value == undefined){
+
+ }else{
+  // Send POST request (Replace "your-api-endpoint" with your actual endpoint)
+  fetch("https://proyectotiendas1.azurewebsites.net/aceptarsolicitud?donante="+findItemById(tiendaNombre).value, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: solicitud
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    return response;
+  })
+  .then(data => {
+    console.log("Success:", data);
+    location.reload();
+  })
+  .catch(error => {
+    console.error("Error:", error);
+  });
+
+
+
+}
+}
+
+</script>
+</html>

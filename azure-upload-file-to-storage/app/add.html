@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>StockFinder Admin Tool</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="icon" type="image/x-icon" href="fav.png">
 <style>
   body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -62,7 +63,7 @@
 
   .form-container form button {
     width: calc(100% - 22px); /* Adjusted width */
-    background-color: #555;
+    background-color: #ff6600;
     color: #fff;
     padding: 12px;
     border: none;
@@ -74,7 +75,7 @@
   }
 
   .form-container form button:hover {
-    background-color: #333;
+    background-color: #cc5500;
   }
 
   .form-container form button:disabled {
@@ -115,7 +116,7 @@
     <a href="add.html">Añadir producto</a>
     <a href="listar.html">Listar productos</a>
     <a href="Borrar.html">Borrar producto</a>
-    <a href="Mod.html">Modificar producto</a>
+    <a href="peticiones.html">Peticiones</a>
   </nav>
 
 <div class="container" id="container">
@@ -125,6 +126,9 @@
     <h2>StockFinder Admin Tool</h2>
 
     <form id="productForm">
+      <label for="tiendaCrear">Tienda:</label><br>
+      <input type="text" id="tiendaCrear" name="tiendaCrear"><br>
+
       <label for="id">ID:</label><br>
       <input type="text" id="id" name="id"><br>
 
@@ -210,7 +214,7 @@
   };
 
   // Send POST request (Replace "your-api-endpoint" with your actual endpoint)
-  fetch("https://proyectotiendas1.azurewebsites.net/create/sevilla", {
+  fetch("https://proyectotiendas1.azurewebsites.net/create/"+document.getElementById("tiendaCrear").value, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
