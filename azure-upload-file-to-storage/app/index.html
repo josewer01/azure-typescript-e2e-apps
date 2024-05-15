@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>StockFinder Admin Tool</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <link rel="icon" type="image/x-icon" href="fav.png">
 <style>
   body {
@@ -24,51 +25,47 @@
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
   }
 
-  #root {
+  .form-container {
     flex: 1;
-    padding-left: 20px;
+    padding-right: 20px;
   }
 
-  .login-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
-
-  .login-form {
-    background-color: #e0e0e0;
-    padding: 40px;
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-    text-align: center;
-  }
-
-  .login-form h2 {
+  .form-container h2 {
     margin-top: 0;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     color: #333;
   }
 
-  .login-form input {
-    width: 100%;
-    padding: 15px;
-    margin-bottom: 20px;
+  .form-container form label {
+    font-weight: bold;
+    color: #555;
+  }
+
+  .form-container form input[type="text"],
+  .form-container form input[type="number"],
+  .form-container form textarea {
+    width: calc(100% - 22px); /* Adjusted width */
+    padding: 8px;
+    margin-bottom: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     box-sizing: border-box;
     background-color: #f5f5f5;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 16px;
+    font-size: 14px;
     color: #333;
     outline: none;
   }
 
-  .login-form button {
-    width: 100%;
-    background-color: #555;
+  .form-container form textarea {
+    min-height: 80px;
+  }
+
+  .form-container form button {
+    width: calc(100% - 22px); /* Adjusted width */
+    background-color: #ff6600;
     color: #fff;
-    padding: 15px;
+    padding: 12px;
     border: none;
     border-radius: 5px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -77,14 +74,22 @@
     transition: background-color 0.3s ease;
   }
 
-  .login-form button:hover {
-    background-color: #333;
+  .form-container form button:hover {
+    background-color: #cc5500;
   }
 
-  .login-form button:disabled {
+  .form-container form button:disabled {
     background-color: #ccc;
     cursor: not-allowed;
   }
+
+  #root {
+    flex: 1;
+    padding-left: 20px;
+  }
+
+
+
   nav {
     background-color: #333;
     overflow: hidden;
@@ -103,32 +108,71 @@
     background-color: #ddd;
     color: black;
   }
+  
 </style>
 </head>
 <body>
-<div class="login-container" id="loginContainer">
-  <div class="login-form">
-    <h2>Login</h2>
-    <input type="text" id="username" placeholder="Username">
-    <br>
-    <input type="password" id="password" placeholder="Password">
-    <br>
-    <button onclick="login()">Login</button>
+  <nav>
+    <a href="add.html">Añadir producto</a>
+    <a href="listar.html">Listar productos</a>
+    <a href="Borrar.html">Borrar producto</a>
+    <a href="peticiones.html">Peticiones</a>
+  </nav>
+
+<div class="container" id="container">
+  <div class="menu">
   </div>
+  <div class="form-container">
+    <h2>StockFinder Admin Tool</h2>
+
+    <form id="productForm">
+      <label for="tiendaCrear">Tienda:</label><br>
+      <input type="text" id="tiendaCrear" name="tiendaCrear"><br>
+
+      <label for="id">ID:</label><br>
+      <input type="text" id="id" name="id"><br>
+
+      <label for="nombre">Nombre:</label><br>
+      <input type="text" id="nombre" name="nombre"><br>
+
+      <label for="stock">Stock:</label><br>
+      <input type="number" id="stock" name="stock"><br>
+
+      <label for="composicion">Composición:</label><br>
+      <input type="text" id="composicion" name="composicion"><br>
+
+      <label for="proveedor">Proveedor:</label><br>
+      <input type="text" id="proveedor" name="proveedor"><br>
+
+      <label for="talla">Talla:</label><br>
+      <input type="text" id="talla" name="talla"><br>
+
+      <label for="categoria">Categoría:</label><br>
+      <input type="text" id="categoria" name="categoria"><br>
+
+      <label for="precio">Precio:</label><br>
+      <input type="number" id="precio" name="precio"><br>
+
+      <label for="imagen">Imagen URL:</label><br>
+      <input type="text" id="imagen" name="imagen"><br>
+
+      <label for="descripcion">Descripción:</label><br>
+      <textarea id="descripcion" name="descripcion"></textarea><br>
+
+      <button type="button" onclick="submitForm()">Submit</button>
+    </form>
+  </div>
+  <div class="vertical-divider"></div>
+  <div id="root">
+    <!-- Script tag for main.tsx -->
+    <script type="module" src="/src/main.tsx"></script>
+  </div>
+</div>
+
 </div>
 
 <script>
 
-
-  function setCookie(name, value, days) {
-    var expires = "";
-    if (days) {
-      var date = new Date();
-      date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-      expires = "; expires=" + date.toUTCString();
-    }
-    document.cookie = name + "=" + (value || "") + expires + "; path=/";
-  }
 
   function getCookie(name) {
     var nameEQ = name + "=";
@@ -145,24 +189,54 @@
     document.cookie = name + '=; Max-Age=-99999999;';
   }
 
-  function login() {
-    var username = document.getElementById("username").value;
-    var password = document.getElementById("password").value;
-    // Here you should perform validation and authentication logic
-    if (username === "admin" && password === "admin") {
-      setCookie("loggedIn", true, 1); // Set cookie for 1 day
-      window.location.href = "index.html";
-    } else {
-      alert("Invalid username or password");
-    }
-  }
-
   window.onload = function () {
     var loggedIn = getCookie("loggedIn");
-    if (loggedIn) {
-       window.location.href = "add.html";
+    if (!loggedIn) {
+        window.location.href = "login.html";
     }
   };
+
+ function submitForm() {
+  event.preventDefault();
+
+  // Gather form data
+  const formData = {
+    id: document.getElementById("id").value,
+    nombre: document.getElementById("nombre").value,
+    stock: parseInt(document.getElementById("stock").value),
+    composicion: document.getElementById("composicion").value,
+    proveedor: document.getElementById("proveedor").value,
+    talla: document.getElementById("talla").value,
+    categoria: document.getElementById("categoria").value,
+    precio: parseInt(document.getElementById("precio").value),
+    imagen: document.getElementById("imagen").value,
+    descripcion: document.getElementById("descripcion").value
+  };
+
+  // Send POST request (Replace "your-api-endpoint" with your actual endpoint)
+  fetch("https://proyectotiendas1.azurewebsites.net/create/"+document.getElementById("tiendaCrear").value, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(formData)
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    return response;
+  })
+  .then(data => {
+    console.log("Success:", data);
+    location.reload();
+  })
+  .catch(error => {
+    console.error("Error:", error);
+  });
+}
+
+
 
 
 </script>
